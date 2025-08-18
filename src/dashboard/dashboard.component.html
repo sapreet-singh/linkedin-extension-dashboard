@@ -1,1 +1,79 @@
-<p>dashboard works!</p>
+<div class="container mt-4">
+
+  <!-- Stats Cards Row -->
+  <div class="row g-4 mb-4">
+    <div class="col-12 col-sm-6 col-md-3">
+      <div class="card text-white bg-success stat-card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Successful</h6>
+          <div class="card-number">{{ successCount }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3">
+      <div class="card text-white bg-danger stat-card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Failed</h6>
+          <div class="card-number">{{ failedCount }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3">
+      <div class="card text-dark bg-warning stat-card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Pending</h6>
+          <div class="card-number">{{ pendingCount }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-3">
+      <div class="card text-white bg-info stat-card">
+        <div class="card-body text-center">
+          <h6 class="card-title">Total</h6>
+          <div class="card-number">{{ totalCount }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profiles Table -->
+  <div class="card shadow-sm rounded">
+    <div class="card-body">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Profile Name</th>
+            <th>LinkedIn URL</th>
+            <th>Message</th>
+            <th>Message Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let profile of profiles; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ profile.name }}</td>
+            <td>
+              <a [href]="profile.linkedin" target="_blank">{{ profile.linkedin }}</a>
+            </td>
+            <td></td>
+            <td>
+              <span class="badge px-3 py-2"
+                    [ngClass]="{
+                      'bg-success': profile.status === 'Accepted',
+                      'bg-danger': profile.status === 'Rejected' || profile.status === 'Failed',
+                      'bg-warning text-dark': profile.status === 'Pending'
+                    }">
+                {{ profile.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

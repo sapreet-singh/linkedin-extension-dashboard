@@ -1,0 +1,145 @@
+/* ========== Layout container ========== */
+.container {
+  margin-top: 1.5rem;
+  max-width: 1100px;            /* keeps content from stretching too wide */
+}
+
+/* ========== Stat cards ========== */
+.stat-card {
+  width: 100%;
+  min-height: 110px;            /* same height for all cards */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .10);
+  transition: transform .2s ease, box-shadow .2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .20);
+}
+
+.stat-card .card-body {
+  padding: 1rem 1.25rem;
+}
+
+.stat-card .card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 .35rem 0;
+  white-space: nowrap;          /* keep title on one line */
+}
+
+.stat-card .card-number {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* Optional: ensure equal visual spacing between columns (Bootstrap gap helper) */
+.row.g-4 > [class*="col-"] {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.row.g-4 {
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+
+/* ========== Table card wrapper ========== */
+.card.shadow-sm.rounded {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+}
+
+/* ========== Table styling ========== */
+.table {
+  margin: 0;                    /* remove extra space inside the card body */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table thead {
+  background-color: #f8f9fa;
+}
+
+.table thead th {
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.table tbody td {
+  text-align: center;
+  vertical-align: middle;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+
+.table tbody tr:hover {
+  background-color: #f5f7fa;
+}
+
+.table a {
+  color: #0d6efd;
+  text-decoration: none;
+  word-break: break-all;        /* long URLs won’t overflow */
+}
+
+.table a:hover {
+  text-decoration: underline;
+}
+
+/* tighter action buttons in table */
+.table .btn {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.85rem;
+  border-radius: 8px;
+}
+.table .btn + .btn {
+  margin-left: 0.35rem;
+}
+
+/* ========== Badges ========== */
+.badge {
+  border-radius: 999px;
+  font-weight: 600;
+  padding: 0.45rem 0.75rem;     /* make badges chunkier */
+}
+
+/* ========== Minor Bootstrap color tweaks (optional) ========== */
+.bg-warning {
+  color: #212529 !important;    /* ensure readable text on warning */
+}
+
+/* ========== Responsive tweaks ========== */
+/* Small screens: keep nice spacing and readable table */
+@media (max-width: 576px) {
+  .stat-card {
+    min-height: 100px;
+  }
+  .stat-card .card-number {
+    font-size: 1.6rem;
+  }
+  /* allow table to scroll horizontally on very small screens */
+  .card-body {
+    overflow-x: auto;
+  }
+  .table {
+    min-width: 560px;           /* enables smooth horizontal scroll */
+  }
+}
+
+/* Medium screens and up: ensure four equal columns feel uniform */
+@media (min-width: 768px) {
+  .stat-card {
+    min-height: 120px;
+  }
+}

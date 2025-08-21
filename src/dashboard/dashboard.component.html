@@ -40,9 +40,9 @@
   </div>
 
   <!-- Profiles Table -->
-  <div class="card shadow-sm rounded">
+  <div class="card shadow-sm">
     <div class="card-body">
-      <table class="table table-hover align-middle">
+      <table class="table table-bordered align-middle">
         <thead class="table-light">
           <tr>
             <th>#</th>
@@ -58,18 +58,48 @@
             <td>{{ i + 1 }}</td>
             <td>{{ profile.name }}</td>
             <td>
-              <a [href]="profile.linkedinUrl" target="_blank">{{ profile.linkedinUrl }}</a>
+              <a [href]="profile.linkedinUrl" target="_blank">
+                {{ profile.linkedinUrl }}
+              </a>
             </td>
-            <td>{{ profile.prompt || '-' }}</td>
-            <td>{{ profile.message || '-' }}</td>
+
+            <!-- Prompt column -->
             <td>
-              <span class="badge px-3 py-2"
+              <ng-container *ngIf="profile.prompt as prompt">
+                <span *ngIf="prompt.length <= 100">{{ prompt }}</span>
+                <span *ngIf="prompt.length > 100">
+                  {{ prompt | slice:0:100 }}...
+                  <button class="btn btn-sm btn-link p-0"
+                          (click)="openModal('Prompt', prompt, modalTemplate)">
+                    Read More
+                  </button>
+                </span>
+              </ng-container>
+            </td>
+
+            <!-- Message column -->
+            <td>
+              <ng-container *ngIf="profile.message as message">
+                <span *ngIf="message.length <= 100">{{ message }}</span>
+                <span *ngIf="message.length > 100">
+                  {{ message | slice:0:100 }}...
+                  <button class="btn btn-sm btn-link p-0"
+                          (click)="openModal('Message', message, modalTemplate)">
+                    Read More
+                  </button>
+                </span>
+              </ng-container>
+            </td>
+
+            <!-- Status -->
+            <td>
+              <span class="badge rounded-pill"
                     [ngClass]="{
-                      'bg-success': profile.status === 'accepted',
-                      'bg-danger': profile.status === 'failed',
-                      'bg-warning text-dark': profile.status === 'pending'
+                      'bg-success': profile.status?.toLowerCase() === 'accepted',
+                      'bg-danger': profile.status?.toLowerCase() === 'failed',
+                      'bg-warning text-dark': profile.status?.toLowerCase() === 'pending'
                     }">
-                {{ profile.status || 'Unknown' }}
+                {{ profile.status || 'N/A' }}
               </span>
             </td>
           </tr>
@@ -78,5 +108,14 @@
     </div>
   </div>
 
-
+  <!-- Modal Template -->
+  <ng-template #modalTemplate let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">{{ modalTitle }}</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <p>{{ modalContent }}</p>
+    </div>
+  </ng-template>
 </div>

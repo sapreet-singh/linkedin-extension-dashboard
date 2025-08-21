@@ -1,11 +1,13 @@
-import { NgClass, NgFor } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, NgClass, NgFor, NgIf, SlicePipe } from '@angular/common';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { LinkedinService } from '../services/linkedin.service';
 import { ProfileDto, ServiceResult } from '../services/model';
+import bootstrap from '../main.server';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgFor, NgClass],
+  imports: [NgFor, NgClass, SlicePipe, CommonModule, NgIf],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -14,8 +16,12 @@ import { ProfileDto, ServiceResult } from '../services/model';
 export class DashboardComponent implements OnInit {
 
   profiles: ProfileDto[] = [];
+  modalTitle = '';
+  modalContent = '';
 
-  constructor(private linkedinService: LinkedinService) {}
+  constructor(private linkedinService: LinkedinService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     this.linkedinService.getAllProfiles().subscribe((result: ServiceResult<ProfileDto[]>) => {
@@ -26,6 +32,12 @@ export class DashboardComponent implements OnInit {
         this.profiles = [];
       }
     });
+  }
+
+   openModal(title: string, content: string, modalTemplate: TemplateRef<any>) {
+    this.modalTitle = title;
+    this.modalContent = content;
+    this.modalService.open(modalTemplate, { size: 'lg' });
   }
 
   get successCount() {

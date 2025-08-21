@@ -1,5 +1,7 @@
 import { NgClass, NgFor } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { LinkedinService } from '../services/linkedin.service';
+import { ProfileDto, ServiceResult } from '../services/model';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,22 +9,35 @@ import { Component } from '@angular/core';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
-  profiles = [
-    { name: 'John Doe', linkedin: 'https://linkedin.com/in/johndoe', status: 'Pending' },
-    { name: 'Jane Smith', linkedin: 'https://linkedin.com/in/janesmith', status: 'Accepted' },
-  ];
+
+
+export class DashboardComponent implements OnInit {
+
+  profiles: ProfileDto[] = [];
+
+  constructor(private linkedinService: LinkedinService) {}
+
+  ngOnInit(): void {
+    this.linkedinService.getAllProfiles().subscribe((result: ServiceResult<ProfileDto[]>) => {
+      if (result.success) {
+        this.profiles = result.data;
+      } else {
+        console.error(result.message);
+        this.profiles = [];
+      }
+    });
+  }
 
   get successCount() {
-    return this.profiles.filter(p => p.status === 'Accepted').length;
+    return this.profiles.filter(p => p.status === 'accepted').length;
   }
 
   get failedCount() {
-    return this.profiles.filter(p => p.status === 'Failed').length;
+    return this.profiles.filter(p => p.status === 'failed').length;
   }
 
   get pendingCount() {
-    return this.profiles.filter(p => p.status === 'Pending').length;
+    return this.profiles.filter(p => p.status === 'pending').length;
   }
 
   get totalCount() {

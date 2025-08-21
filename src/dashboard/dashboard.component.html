@@ -58,18 +58,18 @@
             <td>{{ i + 1 }}</td>
             <td>{{ profile.name }}</td>
             <td>
-              <a [href]="profile.linkedin" target="_blank">{{ profile.linkedin }}</a>
+              <a [href]="profile.linkedinUrl" target="_blank">{{ profile.linkedinUrl }}</a>
             </td>
-            <td></td>
-            <td></td>
+            <td>{{ profile.prompt || '-' }}</td>
+            <td>{{ profile.message || '-' }}</td>
             <td>
               <span class="badge px-3 py-2"
                     [ngClass]="{
-                      'bg-success': profile.status === 'Accepted',
-                      'bg-danger': profile.status === 'Rejected' || profile.status === 'Failed',
-                      'bg-warning text-dark': profile.status === 'Pending'
+                      'bg-success': profile.status === 'accepted',
+                      'bg-danger': profile.status === 'failed',
+                      'bg-warning text-dark': profile.status === 'pending'
                     }">
-                {{ profile.status }}
+                {{ profile.status || 'Unknown' }}
               </span>
             </td>
           </tr>
@@ -77,5 +77,6 @@
       </table>
     </div>
   </div>
+
 
 </div>

@@ -8,7 +8,7 @@ export interface ProfileDto {
   prompt?: string;
   message?: string;
   reason?: string;
-  status?: string;
+  status?: 'accepted' | 'failed' | 'pending';
 }
 
 export interface ServiceResult<T> {

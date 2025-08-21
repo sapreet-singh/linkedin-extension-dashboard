@@ -1,16 +1,18 @@
 /* ========== Layout container ========== */
 .container {
   margin-top: 1.5rem;
-  max-width: 1100px;            /* keeps content from stretching too wide */
+  max-width: 1100px;
+  background-color: #F5F7FA;
+  padding: 20px;
 }
 
 /* ========== Stat cards ========== */
 .stat-card {
   width: 100%;
-  min-height: 110px;            /* same height for all cards */
+  min-height: 110px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, .10);
-  transition: transform .2s ease, box-shadow .2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,7 +21,7 @@
 
 .stat-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, .20);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.20);
 }
 
 .stat-card .card-body {
@@ -29,116 +31,127 @@
 .stat-card .card-title {
   font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 .35rem 0;
-  white-space: nowrap;          /* keep title on one line */
+  margin: 0 0 0.35rem 0;
+  color: #2C3E50;
+  white-space: nowrap;
 }
 
 .stat-card .card-number {
   font-size: 2rem;
   font-weight: 800;
+  color: #FFFFFF;
   line-height: 1.1;
 }
 
-/* Optional: ensure equal visual spacing between columns (Bootstrap gap helper) */
-.row.g-4 > [class*="col-"] {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-}
-.row.g-4 {
-  margin-left: -0.75rem;
-  margin-right: -0.75rem;
-}
-
-/* ========== Table card wrapper ========== */
-.card.shadow-sm.rounded {
-  border: none;
+/* ========== Table wrapper for scrolling ========== */
+.table-wrapper {
+  overflow-x: auto;
+  max-height: 400px;
+  overflow-y: auto;
   border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
-/* ========== Table styling ========== */
 .table {
-  margin: 0;                    /* remove extra space inside the card body */
+  margin: 0;
   border-collapse: separate;
   border-spacing: 0;
+  width: 100%;
+  min-width: 800px;
 }
 
 .table thead {
-  background-color: #f8f9fa;
+  background-color: #34495E;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .table thead th {
-  font-weight: 600;
+  background: #34495E;
+  border: none;
+  padding: 14px 20px;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 500;
   text-align: center;
   vertical-align: middle;
-  padding-top: 0.9rem;
-  padding-bottom: 0.9rem;
-  border-bottom: 1px solid #e9ecef;
+}
+
+.table thead th:first-child {
+  border-radius: 10px 0 0 0;
+}
+
+.table thead th:last-child {
+  border-radius: 0 10px 0 0;
 }
 
 .table tbody td {
+  padding: 14px 20px;
+  font-size: 14px;
+  border-bottom: 1px solid #ECF0F1;
+  color: #2C3E50;
   text-align: center;
   vertical-align: middle;
-  padding-top: 0.9rem;
-  padding-bottom: 0.9rem;
+}
+
+.even-row {
+  background-color: #ECF0F1;
 }
 
 .table tbody tr:hover {
-  background-color: #f5f7fa;
+  background-color: #D5DDE0;
 }
 
 .table a {
-  color: #0d6efd;
+  color: #3498DB;
   text-decoration: none;
-  word-break: break-all;        /* long URLs won’t overflow */
+  word-break: break-all;
 }
 
 .table a:hover {
   text-decoration: underline;
 }
 
-/* tighter action buttons in table */
-.table .btn {
-  padding: 0.35rem 0.65rem;
-  font-size: 0.85rem;
-  border-radius: 8px;
-}
-.table .btn + .btn {
-  margin-left: 0.35rem;
-}
-
 /* ========== Badges ========== */
 .badge {
   border-radius: 999px;
   font-weight: 600;
-  padding: 0.45rem 0.75rem;     /* make badges chunkier */
+  padding: 0.45rem 0.75rem;
+  color: #FFFFFF;
 }
 
-/* ========== Minor Bootstrap color tweaks (optional) ========== */
+.bg-success {
+  background-color: #2ECC71 !important;
+}
+
+.bg-danger {
+  background-color: #E74C3C !important;
+}
+
 .bg-warning {
-  color: #212529 !important;    /* ensure readable text on warning */
+  background-color: #F39C12 !important;
+  color: #2C3E50 !important;
+}
+
+.bg-info {
+  background-color: #3498DB !important;
 }
 
 /* ========== Responsive tweaks ========== */
-/* Small screens: keep nice spacing and readable table */
-@media (max-width: 576px) {
+@media (max-width: 768px) {
   .stat-card {
     min-height: 100px;
   }
   .stat-card .card-number {
     font-size: 1.6rem;
   }
-  /* allow table to scroll horizontally on very small screens */
-  .card-body {
-    overflow-x: auto;
-  }
-  .table {
-    min-width: 560px;           /* enables smooth horizontal scroll */
+  .table-wrapper {
+    -webkit-overflow-scrolling: touch;
   }
 }
 
-/* Medium screens and up: ensure four equal columns feel uniform */
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   .stat-card {
     min-height: 120px;
   }

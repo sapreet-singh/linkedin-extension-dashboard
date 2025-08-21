@@ -14,4 +14,9 @@ export class LinkedinService {
  getAllProfiles(): Observable<ServiceResult<ProfileDto[]>> {
     return this.http.get<ServiceResult<ProfileDto[]>>(`${API_BASE_URL}/linkedin/profiles`);
   }
+
+  GetStatus():Observable<any>
+  {
+    return this.http.get<any>(`${API_BASE_URL}/linkedin/GetStatus`);
+  }
 }

@@ -1,15 +1,6 @@
 import { NgClass, NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 
-type Status = 'Pending' | 'Accepted' | 'Rejected' | 'Failed';
-
-interface Profile {
-  name: string;
-  linkedin: string;
-  status: Status;
-}
-
-
 @Component({
   selector: 'app-dashboard',
   imports: [NgFor, NgClass],

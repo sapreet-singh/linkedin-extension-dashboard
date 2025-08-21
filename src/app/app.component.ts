@@ -4,7 +4,7 @@ import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, SidebarComponent],
+  imports: [SidebarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

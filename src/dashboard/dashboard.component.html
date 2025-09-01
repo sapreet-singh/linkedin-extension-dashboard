@@ -61,28 +61,32 @@
               {{ profile.linkedinUrl }}
             </a>
           </td>
-          <td>
-            <ng-container *ngIf="profile.prompt as prompt">
-              <span *ngIf="prompt.length <= 100">{{ prompt }}</span>
-              <span *ngIf="prompt.length > 100">
-                {{ prompt | slice:0:100 }}...
-                <button class="btn btn-sm btn-link p-0" (click)="openModal('Prompt', prompt, modalTemplate)">
-                  Read More
-                </button>
-              </span>
-            </ng-container>
-          </td>
-          <td>
-            <ng-container *ngIf="profile.message as message">
-              <span *ngIf="message.length <= 100">{{ message }}</span>
-              <span *ngIf="message.length > 100">
-                {{ message | slice:0:100 }}...
-                <button class="btn btn-sm btn-link p-0" (click)="openModal('Message', message, modalTemplate)">
-                  Read More
-                </button>
-              </span>
-            </ng-container>
-          </td>
+
+<td class="truncate-text">
+  <ng-container *ngIf="profile.prompt as prompt">
+    <span *ngIf="prompt.length <= 100">{{ prompt }}</span>
+    <span *ngIf="prompt.length > 100">
+      {{ prompt | slice:0:100 }}...
+      <button class="btn btn-sm btn-link p-0" (click)="openModal('Prompt', prompt, modalTemplate)">
+        Read More
+      </button>
+    </span>
+  </ng-container>
+</td>
+
+<td class="truncate-text">
+  <ng-container *ngIf="profile.message as message">
+    <span *ngIf="message.length <= 100">{{ message }}</span>
+    <span *ngIf="message.length > 100">
+      {{ message | slice:0:100 }}...
+      <button class="btn btn-sm btn-link p-0" (click)="openModal('Message', message, modalTemplate)">
+        Read More
+      </button>
+    </span>
+  </ng-container>
+</td>
+
+
           <td>{{ profile.createdAt | date:'longDate' }}</td>
           <td>
             <span class="badge rounded-pill" [ngClass]="getReasonClass(profile.reason)">

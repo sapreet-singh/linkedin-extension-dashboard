@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
   modalContent = '';
   sendConnectCount = 0;
   failedConnectCount = 0;
+  selectedProfile: any = null;
 
   constructor(
     private linkedinService: LinkedinService,
@@ -58,6 +59,11 @@ export class DashboardComponent implements OnInit {
   openModal(title: string, content: string, modalTemplate: TemplateRef<any>) {
     this.modalTitle = title;
     this.modalContent = content;
+    this.modalService.open(modalTemplate, { size: 'lg' });
+  }
+
+    openRowModal(profile: any, modalTemplate: any) {
+    this.selectedProfile = profile;
     this.modalService.open(modalTemplate, { size: 'lg' });
   }
 

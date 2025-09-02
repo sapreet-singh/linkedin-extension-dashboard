@@ -1,5 +1,4 @@
 <div class="container mt-4">
-
   <!-- Stats Cards Row -->
   <div class="row g-4 mb-4">
     <div class="col-12 col-sm-6 col-md-3">
@@ -40,73 +39,57 @@
   </div>
 
   <!-- Profiles Table -->
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <table class="table table-bordered align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>#</th>
-            <th>Profile Name</th>
-            <th>LinkedIn URL</th>
-            <th>Prompt</th>
-            <th>Message</th>
-            <th>Message Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let profile of profiles; let i = index">
-            <td>{{ i + 1 }}</td>
-            <td>{{ profile.name }}</td>
-            <td>
-              <a [href]="profile.linkedinUrl" target="_blank">
-                {{ profile.linkedinUrl }}
-              </a>
-            </td>
-
-            <!-- Prompt column -->
-            <td>
-              <ng-container *ngIf="profile.prompt as prompt">
-                <span *ngIf="prompt.length <= 100">{{ prompt }}</span>
-                <span *ngIf="prompt.length > 100">
-                  {{ prompt | slice:0:100 }}...
-                  <button class="btn btn-sm btn-link p-0"
-                          (click)="openModal('Prompt', prompt, modalTemplate)">
-                    Read More
-                  </button>
-                </span>
-              </ng-container>
-            </td>
-
-            <!-- Message column -->
-            <td>
-              <ng-container *ngIf="profile.message as message">
-                <span *ngIf="message.length <= 100">{{ message }}</span>
-                <span *ngIf="message.length > 100">
-                  {{ message | slice:0:100 }}...
-                  <button class="btn btn-sm btn-link p-0"
-                          (click)="openModal('Message', message, modalTemplate)">
-                    Read More
-                  </button>
-                </span>
-              </ng-container>
-            </td>
-
-            <!-- Status -->
-            <td>
-              <span class="badge rounded-pill"
-                    [ngClass]="{
-                      'bg-success': profile.status?.toLowerCase() === 'accepted',
-                      'bg-danger': profile.status?.toLowerCase() === 'failed',
-                      'bg-warning text-dark': profile.status?.toLowerCase() === 'pending'
-                    }">
-                {{ profile.status || 'N/A' }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="table-wrapper">
+    <table id="filtersTable" class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Profile Name</th>
+          <th>LinkedIn URL</th>
+          <th>Prompt</th>
+          <th>Message</th>
+          <th>Date</th>
+          <th>Message Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let profile of profiles; let i = index" (click)="openRowModal(profile, modalTemplate)"
+          style="cursor: pointer;">
+          <td>{{ i + 1 }}</td>
+          <td>{{ profile.name }}</td>
+          <td>
+            <a [href]="profile.linkedinUrl" target="_blank">{{ profile.linkedinUrl }}</a>
+          </td>
+          <td>{{ profile.prompt }}</td>
+          <td>{{ profile.message }}</td>
+          <td>{{ profile.createdAt | date:'longDate' }}</td>
+          <td>
+            <span class="badge rounded-pill" [ngClass]="getReasonClass(profile.reason)">
+              {{ getReasonLabel(profile.reason) }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
+  <ng-template #modalTemplate let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Profile Details</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <p><strong>Name:</strong> {{ selectedProfile?.name }}</p>
+      <p><strong>LinkedIn URL:</strong>
+        <a [href]="selectedProfile?.linkedinUrl" target="_blank">{{ selectedProfile?.linkedinUrl }}</a>
+      </p>
+      <p><strong>Prompt:</strong> {{ selectedProfile?.prompt }}</p>
+      <p><strong>Message:</strong> {{ selectedProfile?.message }}</p>
+      <p><strong>Interests:</strong> {{ selectedProfile?.interests }}</p>
+      <p><strong>Date:</strong> {{ selectedProfile?.createdAt | date:'longDate' }}</p>
+      <p><strong>Status:</strong> {{ getReasonLabel(selectedProfile?.reason) }}</p>
+    </div>
+  </ng-template>
 
   <!-- Modal Template -->
   <ng-template #modalTemplate let-modal>

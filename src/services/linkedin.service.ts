@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { API_BASE_URL  } from './config';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProfileDto, ServiceResult } from './model';
@@ -9,9 +8,21 @@ import { ProfileDto, ServiceResult } from './model';
 })
 export class LinkedinService {
 
- constructor(private http: HttpClient) {}
+  private APIURL = 'https://localhost:7120/api';
 
- getAllProfiles(): Observable<ServiceResult<ProfileDto[]>> {
-    return this.http.get<ServiceResult<ProfileDto[]>>(`${API_BASE_URL}/linkedin/profiles`);
+ constructor(private http: HttpClient) {}
+ 
+  /** Get all LinkedIn profiles */
+  getAllProfiles(): Observable<ServiceResult<ProfileDto[]>> {
+    return this.http.get<ServiceResult<ProfileDto[]>>(
+      `${this.APIURL}/linkedin/profiles`
+    );
+  }
+
+  /** Get connection status summary */
+  GetStatus(): Observable<any> {
+    return this.http.get<any>(
+      `${this.APIURL}/linkedin/GetStatus`
+    );
   }
 }

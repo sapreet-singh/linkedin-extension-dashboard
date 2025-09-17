@@ -24,14 +24,14 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getAllProfiles()
-    this.GetStatus()
+    this.getAllProfiles();
+    this.GetStatus();
   }
 
-  getAllProfiles()
-  {
-    this.linkedinService.getAllProfiles().subscribe(
-      (result: ServiceResult<ProfileDto[]>) => {
+  getAllProfiles() {
+    this.linkedinService
+      .getAllProfiles()
+      .subscribe((result: ServiceResult<ProfileDto[]>) => {
         if (result.success) {
           this.profiles = result.data || [];
           console.log('profiles', this.profiles);
@@ -39,12 +39,10 @@ export class DashboardComponent implements OnInit {
           console.error(result.message);
           this.profiles = [];
         }
-      }
-    );
+      });
   }
 
-  GetStatus()
-  {
+  GetStatus() {
     this.linkedinService.GetStatus().subscribe({
       next: (result) => {
         this.sendConnectCount = result.sendConnect || 0;
@@ -52,7 +50,7 @@ export class DashboardComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching status', err);
-      }
+      },
     });
   }
 
@@ -62,21 +60,36 @@ export class DashboardComponent implements OnInit {
     this.modalService.open(modalTemplate, { size: 'lg' });
   }
 
-    openRowModal(profile: any, modalTemplate: any) {
+  openRowModal(profile: any, modalTemplate: any) {
     this.selectedProfile = profile;
     this.modalService.open(modalTemplate, { size: 'lg' });
   }
 
   get successCount() {
-    return this.profiles.filter((p) => p.status?.toLowerCase() === 'accepted').length;
+    return this.profiles.filter((p) => {
+      const normalizedStatus = (p.status || '').toLowerCase();
+      const normalizedReason = (p.reason || '').toLowerCase();
+      return (
+        normalizedStatus === 'accepted' ||
+        normalizedStatus === 'connected' ||
+        normalizedReason === 'accepted' ||
+        normalizedReason === 'connected'
+      );
+    }).length;
   }
 
   get pendingCount() {
-    return this.sendConnectCount;
+    return this.profiles.filter((p) => {
+      const normalized = (p.reason || p.status || '').toLowerCase();
+      return normalized === 'invitation sent' || normalized === 'pending';
+    }).length;
   }
 
   get failedCount() {
-    return this.failedConnectCount;
+    return this.profiles.filter((p) => {
+      const normalized = (p.reason || p.status || '').toLowerCase();
+      return normalized === 'failed';
+    }).length;
   }
 
   get totalCount() {
@@ -97,15 +110,19 @@ export class DashboardComponent implements OnInit {
 
   getReasonClass(reason?: string): string {
     const normalized = (reason || '').toLowerCase();
-    if (normalized === 'accepted') return 'bg-success';
-    if (normalized === 'invitation sent') return 'bg-warning text-dark';
+    if (normalized === 'accepted' || normalized === 'connected')
+      return 'bg-success';
+    if (normalized === 'invitation sent' || normalized === 'pending')
+      return 'bg-warning text-dark';
     return 'bg-danger';
   }
 
   getReasonLabel(reason?: string): string {
     const normalized = (reason || '').toLowerCase();
-    if (normalized === 'accepted') return 'Accepted';
-    if (normalized === 'invitation sent') return 'Invitation Sent';
+    if (normalized === 'accepted' || normalized === 'connected')
+      return 'Connected';
+    if (normalized === 'invitation sent' || normalized === 'pending')
+      return 'Invitation Sent';
     return 'Failed';
   }
 }

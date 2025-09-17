@@ -80,14 +80,14 @@
     </div>
     <div class="modal-body">
       <p><strong>Name:</strong> {{ selectedProfile?.name }}</p>
-      <p><strong>LinkedIn URL:</strong>
+      <p><strong>LinkedIn URL: </strong>
         <a [href]="selectedProfile?.linkedinUrl" target="_blank">{{ selectedProfile?.linkedinUrl }}</a>
       </p>
-      <p><strong>Prompt:</strong> {{ selectedProfile?.prompt }}</p>
-      <p><strong>Message:</strong> {{ selectedProfile?.message }}</p>
-      <p><strong>Interests:</strong> {{ selectedProfile?.interests }}</p>
-      <p><strong>Date:</strong> {{ selectedProfile?.createdAt | date:'longDate' }}</p>
-      <p><strong>Status:</strong> {{ getReasonLabel(selectedProfile?.reason) }}</p>
+      <p><strong>Prompt: </strong> {{ selectedProfile?.prompt }}</p>
+      <p><strong>Interests: </strong> {{ selectedProfile?.interests }}</p>
+      <p><strong>Message: </strong> {{ selectedProfile?.message }}</p>
+      <p><strong>Status: </strong> {{ getReasonLabel(selectedProfile?.reason) }}</p>
+      <p><strong>Date: </strong> {{ selectedProfile?.createdAt | date:'longDate' }}</p>
     </div>
   </ng-template>
 

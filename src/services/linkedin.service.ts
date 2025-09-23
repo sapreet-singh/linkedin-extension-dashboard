@@ -4,14 +4,13 @@ import { Observable } from 'rxjs';
 import { ProfileDto, ServiceResult } from './model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LinkedinService {
-
   private APIURL = 'https://localhost:7120/api';
 
- constructor(private http: HttpClient) {}
- 
+  constructor(private http: HttpClient) {}
+
   /** Get all LinkedIn profiles */
   getAllProfiles(): Observable<ServiceResult<ProfileDto[]>> {
     return this.http.get<ServiceResult<ProfileDto[]>>(
@@ -21,8 +20,13 @@ export class LinkedinService {
 
   /** Get connection status summary */
   GetStatus(): Observable<any> {
-    return this.http.get<any>(
-      `${this.APIURL}/linkedin/GetStatus`
+    return this.http.get<any>(`${this.APIURL}/linkedin/GetStatus`);
+  }
+
+  updateAutomationProfile(profileId: number, enabled: boolean) {
+    return this.http.post(
+      `${this.APIURL}/linkedin/${profileId}/automation/${enabled}`, // <-- use path param
+      {}
     );
   }
 }

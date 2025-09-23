@@ -46,9 +46,10 @@
           <th>#</th>
           <th>Profile Name</th>
           <th>LinkedIn URL</th>
-          <th>Prompt</th>
-          <th>Message</th>
+          <!-- <th>Prompt</th> -->
+          <!-- <th>Message</th> -->
           <th>Date</th>
+          <th>Automation Profile</th>
           <th>Message Status</th>
         </tr>
       </thead>
@@ -60,9 +61,17 @@
           <td>
             <a [href]="profile.linkedinUrl" target="_blank">{{ profile.linkedinUrl }}</a>
           </td>
-          <td>{{ profile.prompt }}</td>
-          <td>{{ profile.message }}</td>
+          <!-- <td>{{ profile.prompt }}</td> -->
+          <!-- <td>{{ profile.message }}</td> -->
           <td>{{ profile.createdAt | date:'longDate' }}</td>
+          <td>
+            <div class="toggle-switch" (click)="toggleAutomation(profile); $event.stopPropagation()">
+              <div class="toggle-container" [ngClass]="{'active': profile.isAutomated}">
+                <span class="toggle-text">{{ profile.isAutomated ? 'ON' : 'OFF' }}</span>
+                <div class="toggle-circle" [ngClass]="{'active': profile.isAutomated}"></div>
+              </div>
+            </div>
+          </td>
           <td>
             <span class="badge rounded-pill" [ngClass]="getReasonClass(profile.reason)">
               {{ getReasonLabel(profile.reason) }}
@@ -87,7 +96,8 @@
       <p><strong>Interests: </strong> {{ selectedProfile?.interests }}</p>
       <p><strong>Message: </strong> {{ selectedProfile?.message }}</p>
       <p><strong>Status: </strong> {{ getReasonLabel(selectedProfile?.reason) }}</p>
-      <p><strong>Date: </strong> {{ selectedProfile?.createdAt | date:'longDate' }}</p>
+      <p><strong>Request Date: </strong> {{ selectedProfile?.createdAt | date:'longDate' }}</p>
+      <p><strong>Accepted Date: </strong> {{ selectedProfile?.createdAt | date:'longDate' }}</p>
     </div>
   </ng-template>
 

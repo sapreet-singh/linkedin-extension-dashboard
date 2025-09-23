@@ -1,4 +1,5 @@
 export interface ProfileDto {
+  id:number;
   linkedinUrl: string;
   name: string;
   title: string;
@@ -8,6 +9,7 @@ export interface ProfileDto {
   prompt?: string;
   message?: string;
   reason?: string;
+  isAutomated:boolean;
   status?: 'accepted' | 'failed' | 'pending';
 }
 

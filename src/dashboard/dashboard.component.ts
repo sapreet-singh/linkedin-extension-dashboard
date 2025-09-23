@@ -3,12 +3,13 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { LinkedinService } from '../services/linkedin.service';
 import { ProfileDto, ServiceResult } from '../services/model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
   imports: [NgFor, NgClass, CommonModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
   profiles: ProfileDto[] = [];
@@ -20,7 +21,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private linkedinService: LinkedinService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -124,5 +126,38 @@ export class DashboardComponent implements OnInit {
     if (normalized === 'invitation sent' || normalized === 'pending')
       return 'Invitation Sent';
     return 'Failed';
+  }
+
+  toggleAutomation(profile: ProfileDto) {
+    const newValue = !profile.isAutomated;
+    profile.isAutomated = newValue;
+
+    this.linkedinService
+      .updateAutomationProfile(profile.id, newValue)
+      .subscribe({
+        next: () => {
+          this.toastr.success(
+            `Automation ${newValue ? 'enabled' : 'disabled'} for ${
+              profile.name
+            }`,
+            'Success',
+            {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+              closeButton: true,
+            }
+          );
+        },
+        error: (err) => {
+          this.toastr.error('Failed to update automation', 'Error', {
+            timeOut: 5000,
+            positionClass: 'toast-top-right',
+            closeButton: true,
+            progressBar: true,
+          });
+          console.error('Failed to update automation', err);
+          profile.isAutomated = !newValue;
+        },
+      });
   }
 }

@@ -13,6 +13,17 @@ export interface ProfileDto {
   status?: 'accepted' | 'failed' | 'pending';
 }
 
+export interface FollowUpLog {
+  name: string;
+  title: string;
+  profileimg?: string;
+  sentdate: string;
+  followUp1: string;
+  followUp2: string | null;
+  followUp3: string | null;
+  totalFollowUps: number;
+}
+
 export interface ServiceResult<T> {
   success: boolean;
   message: string;

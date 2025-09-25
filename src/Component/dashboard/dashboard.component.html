@@ -95,6 +95,11 @@
       <p><strong>Prompt: </strong> {{ selectedProfile?.prompt }}</p>
       <p><strong>Interests: </strong> {{ selectedProfile?.interests }}</p>
       <p><strong>Message: </strong> {{ selectedProfile?.message }}</p>
+      <p><strong>Follow-Up: </strong>
+        <span class="badge rounded-pill" [ngClass]="selectedProfile?.isAutomated ? 'bg-success' : 'bg-secondary'">
+          {{ selectedProfile?.isAutomated ? 'ON' : 'OFF' }}
+        </span>
+      </p>
       <p><strong>Status: </strong> {{ getReasonLabel(selectedProfile?.reason) }}</p>
       <p><strong>Request Date: </strong> {{ selectedProfile?.createdAt | date:'longDate' }}</p>
       <p><strong>Accepted Date: </strong> {{ selectedProfile?.createdAt | date:'longDate' }}</p>

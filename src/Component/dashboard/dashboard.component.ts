@@ -1,9 +1,9 @@
 import { CommonModule, NgClass, NgFor, NgIf, SlicePipe } from '@angular/common';
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { LinkedinService } from '../services/linkedin.service';
-import { ProfileDto, ServiceResult } from '../services/model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
+import { ProfileDto, ServiceResult } from '../../services/model';
+import { LinkedinService } from '../../services/linkedin.service';
 
 @Component({
   selector: 'app-dashboard',

@@ -1,0 +1,80 @@
+<div class="follow-up-container">
+  <div class="header">
+    <h2>Follow-up Dashboard</h2>
+    <div class="actions">
+      <button class="refresh-btn" (click)="refreshLogs()" [disabled]="isLoading">
+        <i class="fa fa-refresh" [class.fa-spin]="isLoading"></i> Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Loading follow-up logs...</p>
+  </div>
+
+  <!-- Error message -->
+  <div class="error-container" *ngIf="error">
+    <div class="error-message">
+      <i class="fa fa-exclamation-circle"></i>
+      <p>{{error}}</p>
+      <button class="retry-btn" (click)="refreshLogs()">Try Again</button>
+    </div>
+  </div>
+
+  <div class="logs-container" *ngIf="!isLoading && !error">
+    <div class="logs-header">
+      <div class="column contact-col">Contact</div>
+      <div class="column message-col">Message</div>
+      <div class="column date-col">Date</div>
+      <div class="column status-col">Status</div>
+    </div>
+
+    <div class="logs-body">
+      <ng-container *ngIf="logs.length > 0; else noLogs">
+        <div class="log-item" *ngFor="let log of filteredLogs; let i = index" [ngClass]="getStatus(log)">
+          <div class="column contact-col">
+            <div class="contact-info">
+              <img [src]="log.profileimg || 'assets/images/default-profile.png'" (error)="handleImageError($event)" alt="Profile" class="profile-img">
+              <div class="contact-details">
+                <div class="name">{{log.name}}</div>
+                <div class="title">{{log.title}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="column message-col" (mouseenter)="expandedLogs.add(i)" (mouseleave)="expandedLogs.delete(i)">
+            <ng-container *ngIf="!expandedLogs.has(i)">
+              <ng-container *ngIf="getCurrentMessage(log) as msg">
+                {{ msg | slice:0:50 }}
+                <span *ngIf="msg.length > 50">... </span>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="expandedLogs.has(i)">
+              {{ getCurrentMessage(log) }}
+            </ng-container>
+          </div>
+
+
+          <div class="column date-col"><span class="date-badge">{{ formatSentDate(log) }}</span></div>
+          <div class="column status-col">
+            <span class="status-badge" [ngClass]="getStatus(log)">
+              {{log.totalFollowUps}}/3 Follow-ups 
+            </span>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noLogs>
+        <div class="no-logs">
+          <i class="fa fa-info-circle"></i>
+          <p>No follow-up logs available</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="!isLoading && !error && totalPages > 1">
+    <button [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">Previous</button>
+    <span>Page {{currentPage}} of {{totalPages}}</span>
+    <button [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">Next</button>
+  </div>

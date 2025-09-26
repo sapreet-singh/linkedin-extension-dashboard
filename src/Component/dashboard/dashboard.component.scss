@@ -50,6 +50,62 @@
   line-height: 1.1;
 }
 
+/* Toggle Switch Styles */
+.toggle-switch {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.toggle-container {
+  position: relative;
+  width: 90px;
+  height: 42px;
+  background-color: #D9E0C0;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-text {
+  color: #455a64;
+  font-weight: 700;
+  font-size: 18px;
+  z-index: 1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.toggle-circle {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-container.active .toggle-circle {
+  right: 5px;
+  left: auto;
+}
+
+.toggle-container:not(.active) .toggle-circle {
+  right: auto;
+  left: 5px;
+  background-color: #455a64;
+}
+
+.toggle-container.active .toggle-text {
+  margin-right: 5px;
+}
+
+.toggle-container:not(.active) .toggle-text {
+  margin-left: 5px;
+}
+
 /* ========== Table wrapper for scrolling ========== */
 .table-wrapper {
   overflow-x: auto;

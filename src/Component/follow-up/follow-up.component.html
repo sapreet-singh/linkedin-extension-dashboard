@@ -33,7 +33,7 @@
 
     <div class="logs-body">
       <ng-container *ngIf="logs.length > 0; else noLogs">
-        <div class="log-item" *ngFor="let log of filteredLogs; let i = index" [ngClass]="getStatus(log)">
+        <div class="log-item" *ngFor="let log of filteredLogs; let i = index" [ngClass]="getStatus(log)" (click)="openLogDetailsWithTemplate(log, followUpDetailsModal)" style="cursor: pointer;">
           <div class="column contact-col">
             <div class="contact-info">
               <img [src]="log.profileimg || 'assets/images/default-profile.png'" (error)="handleImageError($event)" alt="Profile" class="profile-img">
@@ -78,3 +78,79 @@
     <span>Page {{currentPage}} of {{totalPages}}</span>
     <button [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">Next</button>
   </div>
+
+  <!-- Follow-up Details Modal -->
+  <ng-template #followUpDetailsModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Follow-up Details</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="profile-section" *ngIf="selectedLog">
+        <div class="profile-header">
+          <img [src]="selectedLog.profileimg || 'assets/images/default-profile.png'" 
+               (error)="handleImageError($event)" 
+               alt="Profile" 
+               class="modal-profile-img">
+          <div class="profile-info">
+            <h6 class="profile-name">{{ selectedLog.name }}</h6>
+            <p class="profile-title">{{ selectedLog.title }}</p>
+          </div>
+        </div>
+        
+        <div class="follow-up-info">
+          <div class="info-row">
+            <strong>Sent Date:</strong> 
+            <span class="date-value">{{ formatSentDate(selectedLog) }}</span>
+          </div>
+
+          <div class="info-row">
+            <strong>Status:</strong> 
+            <span class="status-badge" [ngClass]="getStatus(selectedLog)">{{ getStatusText(selectedLog) }}</span>
+          </div>
+          
+          <div class="info-row">
+            <strong>Total Follow-ups:</strong> 
+            <span class="badge" [ngClass]="getStatusBadgeClass(selectedLog)">{{ selectedLog.totalFollowUps }}/3</span>
+          </div>
+
+          <div class="info-row">
+            <strong>Next Follow-up Scheduled:</strong> 
+            <span class="scheduled-time" [ngClass]="getScheduledTimeClass(selectedLog)">
+              {{ formatScheduledTime(selectedLog) }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="messages-section">
+          <h6>Follow-up Messages:</h6>
+          
+          <div class="message-item" *ngIf="selectedLog.followUp1">
+            <div class="message-header">
+              <span class="message-number">Follow-up #1</span>
+            </div>
+            <div class="message-content">{{ selectedLog.followUp1 }}</div>
+          </div>
+          
+          <div class="message-item" *ngIf="selectedLog.followUp2">
+            <div class="message-header">
+              <span class="message-number">Follow-up #2</span>
+            </div>
+            <div class="message-content">{{ selectedLog.followUp2 }}</div>
+          </div>
+          
+          <div class="message-item" *ngIf="selectedLog.followUp3">
+            <div class="message-header">
+              <span class="message-number">Follow-up #3</span>
+            </div>
+            <div class="message-content">{{ selectedLog.followUp3 }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+    </div>
+  </ng-template>

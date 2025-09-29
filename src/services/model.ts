@@ -22,6 +22,7 @@ export interface FollowUpLog {
   followUp2: string | null;
   followUp3: string | null;
   totalFollowUps: number;
+  scheduledTime:string;
 }
 
 export interface ServiceResult<T> {

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LinkedinService } from '../../services/linkedin.service';
 import { finalize } from 'rxjs/operators';
 import { FollowUpLog } from '../../services/model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-follow-up',
@@ -21,9 +22,17 @@ export class FollowUpComponent implements OnInit {
   totalPages: number = 1;
   isLoading: boolean = false;
   error: string | null = null;
-   expandedLogs: Set<number> = new Set();
+  expandedLogs: Set<number> = new Set();
+  selectedProfile: any = null;
+  selectedLog: FollowUpLog | null = null;
+  modalTitle = '';
+  modalContent = '';
+  
+  @ViewChild('followUpDetailsModal') followUpDetailsModal!: TemplateRef<any>;
 
-  constructor(private linkedinService: LinkedinService) {}
+  constructor(private linkedinService: LinkedinService,
+     private modalService: NgbModal,
+  ) {}
 
   ngOnInit(): void {
     this.loadLogs();
@@ -41,7 +50,6 @@ export class FollowUpComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
-          console.log("response", response);
           if (response && response.success && response.data) {
             this.logs = response.data;
             this.filterLogs();
@@ -51,7 +59,6 @@ export class FollowUpComponent implements OnInit {
             this.logs = [];
             this.filterLogs();
           }
-          console.log("logs", this.logs);
         },
         error: (err) => {
           console.error('Error fetching follow-up logs:', err);
@@ -68,8 +75,6 @@ export class FollowUpComponent implements OnInit {
   }
 
   filterLogs(): void {
-    // Since we don't have a status field in the new API format,
-    // we'll filter based on totalFollowUps for now
     if (this.filterStatus === 'all') {
       this.filteredLogs = [...this.logs];
     } else if (this.filterStatus === 'pending') {
@@ -77,7 +82,6 @@ export class FollowUpComponent implements OnInit {
     } else if (this.filterStatus === 'completed') {
       this.filteredLogs = this.logs.filter(log => log.totalFollowUps === 3);
     } else if (this.filterStatus === 'failed') {
-      // For now, we don't have a failed status in the API
       this.filteredLogs = [];
     }
     this.calculatePagination();
@@ -94,29 +98,23 @@ export class FollowUpComponent implements OnInit {
   
   viewDetails(log: FollowUpLog): void {
     console.log('Viewing details for log:', log);
-    // Implement view details functionality
   }
 
   resendMessage(log: FollowUpLog): void {
     console.log('Resending message for log:', log);
-    // Implement resend functionality
   }
   
-  // Helper method to get the current follow-up message
   getCurrentMessage(log: FollowUpLog): string {
-    // Ensure we always return a string to avoid undefined in the template
     if (log.followUp3) return log.followUp3;
     if (log.followUp2) return log.followUp2;
     if (log.followUp1) return log.followUp1;
     return '';
   }
   
-  // Helper method to get status based on totalFollowUps
   getStatus(log: FollowUpLog): string {
     if (log.totalFollowUps === 3) return 'completed';
     return 'pending';
   }
-  // Helper method to handle image loading errors
   handleImageError(event: any): void {
     event.target.src = 'assets/images/default-profile.png';
   }
@@ -129,11 +127,99 @@ export class FollowUpComponent implements OnInit {
     }
   }
 
-  // Helper to render sent date safely without optional chaining in template
   formatSentDate(log: FollowUpLog): string {
     const sd: any = (log as any)?.sentdate;
     if (!sd) return '-';
     const str = typeof sd === 'string' ? sd : sd.toString();
     return str.includes('.') ? str.split('.')[0] : str;
+  }
+
+  formatScheduledTime(log: FollowUpLog | null): string {
+    if (!log || !log.scheduledTime) return 'Not scheduled';
+    
+    try {
+      const scheduledDate = new Date(log.scheduledTime);
+      if (isNaN(scheduledDate.getTime())) {
+        return 'Invalid date';
+      }
+      
+      // Format as readable date and time
+      return scheduledDate.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    } catch (error) {
+      console.error('Error formatting scheduled time:', error);
+      return 'Invalid date';
+    }
+  }
+
+  openModal(title: string, content: string, modalTemplate: TemplateRef<any>) {
+    this.modalTitle = title;
+    this.modalContent = content;
+    this.modalService.open(modalTemplate, { size: 'lg' });
+  }
+
+  openRowModal(profile: any, modalTemplate: any) {
+    this.selectedProfile = profile;
+    this.modalService.open(modalTemplate, { size: 'lg' });
+  }
+
+  openLogDetails(log: FollowUpLog): void {
+    console.log('Row clicked, opening modal for:', log);
+    this.selectedLog = log;
+    
+    setTimeout(() => {
+      if (this.followUpDetailsModal) {
+        this.modalService.open(this.followUpDetailsModal, { size: 'lg' });
+      } else {
+        console.error('Modal template not found');
+      }
+    }, 0);
+  }
+
+  openLogDetailsWithTemplate(log: FollowUpLog, modalTemplate: TemplateRef<any>): void {
+    console.log('Row clicked, opening modal for:', log);
+    this.selectedLog = log;
+    this.modalService.open(modalTemplate, { size: 'lg' });
+  }
+
+  getStatusText(log: FollowUpLog): string {
+    if (log.totalFollowUps === 3) return 'Completed';
+    if (log.totalFollowUps === 0) return 'Not Started';
+    return 'In Progress';
+  }
+
+  getStatusBadgeClass(log: FollowUpLog): string {
+    if (log.totalFollowUps === 3) return 'badge-success';
+    if (log.totalFollowUps === 0) return 'badge-secondary';
+    return 'badge-warning';
+  }
+
+  getScheduledTimeClass(log: FollowUpLog | null): string {
+    if (!log || !log.scheduledTime) return 'scheduled-none';
+    
+    try {
+      const scheduledDate = new Date(log.scheduledTime);
+      const now = new Date();
+      
+      if (isNaN(scheduledDate.getTime())) {
+        return 'scheduled-invalid';
+      }
+      
+      if (scheduledDate < now) {
+        return 'scheduled-overdue';
+      } else if (scheduledDate.toDateString() === now.toDateString()) {
+        return 'scheduled-today';
+      } else {
+        return 'scheduled-upcoming';
+      }
+    } catch (error) {
+      return 'scheduled-invalid';
+    }
   }
 }
